@@ -1,0 +1,11 @@
+# OSX Noise
+*.swp
+*.out*
+*.pyc
+.DS_Store
+
+# Dot Net Core
+bin/
+obj/
+.vscode/
+project.lock.json
