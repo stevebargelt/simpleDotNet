@@ -1,15 +1,12 @@
 node ('dotnetcore') {
-	echo 'hello from Simple Dot Net Pipeline'
-    //input 'Ready to go?'
-    
-	git branch: "master" url: "https://github.com/stevebargelt/simpleDotNet.git"
+	
+	stage 'checkout'    
+    	git url: 'https://github.com/stevebargelt/simpleDotNet'
 
-	// sh 'cd /home/jenkins/workspace/simpleDotNet'
-	// sh 'ls -la'
-
-	//sh 'buildme.sh'
-	sh 'dotnet restore'
-	sh 'dotnet build'
+	stage 'build'
+		//sh 'buildme.sh'
+		sh 'dotnet restore'
+		sh 'dotnet build'
 }
 
 // RUN ["dotnet", "restore"]
