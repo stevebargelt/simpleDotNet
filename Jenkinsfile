@@ -2,7 +2,7 @@ node ('dotnetcore') {
 	echo 'hello from Simple Dot Net Pipeline'
     //input 'Ready to go?'
     
-	git branch: 'master' url: 'https://github.com/stevebargelt/simpleDotNet.git'
+	git branch: "master" url: "https://github.com/stevebargelt/simpleDotNet.git"
 
 	// sh 'cd /home/jenkins/workspace/simpleDotNet'
 	// sh 'ls -la'
