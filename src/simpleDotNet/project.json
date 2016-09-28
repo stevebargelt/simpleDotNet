@@ -4,6 +4,7 @@
       "version": "1.0.0",
       "type": "platform"
     },
+    "Docker.DotNet": "2.124.1",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Mvc": "1.0.0",
     "Microsoft.AspNetCore.Razor.Tools": {
