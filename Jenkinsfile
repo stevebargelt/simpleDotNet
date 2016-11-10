@@ -1,4 +1,4 @@
-node ('TeamBargelt_DotNetCore04') {
+node ('TeamBargelt_dotnetcore_simpleDotNet') {
 	
 	stage('checkout') {    
     	git url: 'https://github.com/stevebargelt/simpleDotNet'
