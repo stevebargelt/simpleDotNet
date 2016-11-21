@@ -11,7 +11,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 			//sh './buildme.sh'
 			sh 'dotnet restore'
 			//sh 'dotnet build ./src/simpleDotNet'
-			sh 'dotnet test test/simpleDotNet.Tests/project.json`'
+			sh 'dotnet test test/simpleDotNet.Tests/project.json'
 			//sh 'cd /src/simpleDotNet'
 			sh 'dotnet publish src/simpleDotNet/project.json -c release -o $(pwd)/publish/'
 			//archiveArtifacts artifacts: './publish/**', fingerprint: true
