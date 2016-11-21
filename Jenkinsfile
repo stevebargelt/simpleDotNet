@@ -8,7 +8,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 			git url: 'https://github.com/stevebargelt/simpleDotNet'
 
 			sh 'ls -la'
-			sh 'buildme.sh'
+			sh './buildme.sh'
 			//sh 'dotnet restore'
 			//sh 'dotnet build ./src/simpleDotNet'
 			//sh 'dotnet test ./test/simpleDotNet.Tests'
