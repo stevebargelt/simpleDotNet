@@ -1,13 +1,7 @@
-FROM microsoft/dotnet:latest
-
-COPY . /app
+FROM microsoft/aspnetcore:1.0.1
 
 WORKDIR /app
+COPY . .
 
-RUN ["dotnet", "restore"]
-
-RUN ["dotnet", "build"]
-
-EXPOSE 5000/tcp
-
-ENTRYPOINT ["dotnet", "run", "--server.urls", "http://0.0.0.0:5000"]
+EXPOSE 80
+ENTRYPOINT ["dotnet", "simpleDotNet.dll"]

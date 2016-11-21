@@ -7,5 +7,8 @@
 # Dot Net Core
 bin/
 obj/
+publish/
+node_modules/
+bower_components/
 .vscode/
 project.lock.json
