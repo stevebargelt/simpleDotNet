@@ -12,7 +12,8 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 			sh 'dotnet publish src/simpleDotNet/project.json -c release -o $(pwd)/publish/'
 			//archiveArtifacts artifacts: './publish/**', fingerprint: true
 
-			def pcImg = docker.build("simpleDotNet:${env.BUILD_TAG}", 'publish')   
+			//def pcImg = docker.build("simpledotnet:${env.BUILD_TAG}", 'publish')
+			def pcImg = docker.build("abs-registry.harebrained-apps.com:simpledotnet", 'publish')   
 			pcImg.push();
 		}
 	} //docker 		
