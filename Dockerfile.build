@@ -1,0 +1,81 @@
+FROM openjdk:8-jdk 
+# ^^ openjdk:8-jdk  ^^ is based on buildpack-deps:jessie-scm just like...
+# microsoft/dotnet:latest is
+#### must have the JDK base container for Jenkins integration
+
+MAINTAINER Steve Bargelt
+
+##### START DOT NET CORE 
+##### https://github.com/dotnet/dotnet-docker/blob/master/1.0/debian/sdk/projectjson/Dockerfile
+#####
+
+# Install .NET CLI dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libc6 \
+        libcurl3 \
+        libgcc1 \
+        libgssapi-krb5-2 \
+        libicu52 \
+        liblttng-ust0 \
+        libssl1.0.0 \
+        libstdc++6 \
+        libunwind8 \
+        libuuid1 \
+        zlib1g \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install .NET Core SDK
+ENV DOTNET_SDK_VERSION 1.0.0-preview2-003131
+ENV DOTNET_SDK_DOWNLOAD_URL https://dotnetcli.blob.core.windows.net/dotnet/preview/Binaries/$DOTNET_SDK_VERSION/dotnet-dev-debian-x64.$DOTNET_SDK_VERSION.tar.gz
+
+RUN curl -SL $DOTNET_SDK_DOWNLOAD_URL --output dotnet.tar.gz \
+    && mkdir -p /usr/share/dotnet \
+    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
+    && rm dotnet.tar.gz \
+    && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+
+# Trigger the population of the local package cache
+ENV NUGET_XMLDOC_MODE skip
+RUN mkdir warmup \
+    && cd warmup \
+    && dotnet new \
+    && cd .. \
+    && rm -rf warmup \
+    && rm -rf /tmp/NuGetScratch
+
+##### END OF DOTNET CORE Dockerfile
+
+##### START ASP.NET CORE BUILD Dockerfile
+##### https://github.com/aspnet/aspnet-docker/blob/master/1.0.1/jessie/runtime/Dockerfile
+##### 
+
+# set env var for packages cache
+ENV DOTNET_HOSTING_OPTIMIZATION_CACHE /packagescache
+
+COPY ./build-cache.sh /packagescache/build-cache.sh
+
+# set up package cache
+RUN chmod +x /packagescache/build-cache.sh \
+    && /packagescache/build-cache.sh http://dist.asp.net/packagecache/aspnetcore.packagecache-1.0.1-debian.8-x64.tar.gz \
+    && rm /packagescache/build-cache.sh
+
+# set up network
+ENV ASPNETCORE_URLS http://+:80
+
+
+##### END OF THE ASP.NET CORE BUILD Dockerfile
+
+##### START Jenkins Slave Node Config settings
+
+# Create Jenkins User
+RUN useradd jenkins -m -s /bin/bash
+
+RUN chown -R jenkins /home/jenkins
+RUN chgrp -R jenkins /home/jenkins
+
+# Add the jenkins user to sudoers
+RUN echo "jenkins    ALL=(ALL)    ALL" >> etc/sudoers
+
+# Set Name Servers
+COPY /files/resolv.conf /etc/resolv.conf
