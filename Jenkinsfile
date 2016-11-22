@@ -13,7 +13,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 			//archiveArtifacts artifacts: './publish/**', fingerprint: true
 
 			//def pcImg = docker.build("simpledotnet:${env.BUILD_TAG}", 'publish')
-			echo "Building: ${env.BUILD_TAG}""
+			echo "Building: ${env.BUILD_TAG}"
 			def pcImg = docker.build("simpledotnet", 'publish')   
 			pcImg.push();
 		}
