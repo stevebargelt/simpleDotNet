@@ -1,22 +1,27 @@
 #!/usr/bin/env groovy
 
 node ('TeamBargelt_dotnetcore_simpleDotNet') {
-	
-	docker.withRegistry('https://abs-registry.harebrained-apps.com/', 'absadmin') {
+	stage('Build') {    
+		git url: 'https://github.com/stevebargelt/simpleDotNet'
 
-		stage('build') {    
-			git url: 'https://github.com/stevebargelt/simpleDotNet'
-
-			sh 'dotnet restore'
-			sh 'dotnet test test/simpleDotNet.Tests/project.json'
-			sh 'dotnet publish src/simpleDotNet/project.json -c release -o $(pwd)/publish/'
-			//archiveArtifacts artifacts: './publish/**', fingerprint: true
-
-			//def pcImg = docker.build("simpledotnet:${env.BUILD_TAG}", 'publish')
-			//jenkins-simpleaspdotnetcore-36
-			echo "Building: ${env.BUILD_TAG} || Build Number: ${env.BUILD_NUMBER}"
-			def pcImg = docker.build("simpledotnet", 'publish')   
-			pcImg.push();
+		sh 'dotnet restore'
+		sh 'dotnet test test/simpleDotNet.Tests/project.json'
+	}
+	stage('Publish') {
+		sh 'dotnet publish src/simpleDotNet/project.json -c release -o $(pwd)/publish/'
+		echo "Building: ${env.BUILD_TAG} || Build Number: ${env.BUILD_NUMBER}"
+		sh "docker build -t abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+		sh "docker push abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+	}
+	stage('Production') {
+		withEnv([
+			"DOCKER_TLS_VERIFY=1",
+			"DOCKER_HOST=tcp://sdn.harebrained-apps.com:2376",
+			"DOCKER_CERT_PATH=/usr/local/etc/jenkins/certs/"
+		]) {
+			sh "docker pull abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+			sh "docker run abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 		}
-	} //docker 		
+	}
+
 } //node
