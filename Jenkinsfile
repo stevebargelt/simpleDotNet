@@ -24,7 +24,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 		]) {
 			sh "docker pull abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 			//sh "docker stop sdn"
-			sh "docker run -d --name sdn -p -rm 8001:80 abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+			sh "docker run -d --name sdn -p --rm 8001:80 abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 		}
 	}
 } //node
