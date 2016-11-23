@@ -12,7 +12,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 		echo "Building: ${env.BUILD_TAG} || Build Number: ${env.BUILD_NUMBER}"
 		sh "docker build -t abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER} publish"
 		withCredentials([usernamePassword(credentialsId: 'absadmin', passwordVariable: 'REGISTRY_PASSWORD', usernameVariable: 'REGISTRY_USER')]) {
-			sh "docker login -u='${REGISTRY_USER}' -p='${REGISTRY_PASSWORD}'"
+			sh "docker login abs-registry.harebrained-apps.com -u='${REGISTRY_USER}' -p='${REGISTRY_PASSWORD}'"
 		}
     	sh "docker push abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 	}
