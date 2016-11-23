@@ -10,7 +10,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 	stage('Publish') {
 		sh 'dotnet publish src/simpleDotNet/project.json -c release -o $(pwd)/publish/'
 		echo "Building: ${env.BUILD_TAG} || Build Number: ${env.BUILD_NUMBER}"
-		sh "docker build -t abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+		sh "docker build -t abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER} publish"
 		sh "docker push abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 	}
 	stage('Production') {
