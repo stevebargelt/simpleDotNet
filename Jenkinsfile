@@ -23,7 +23,7 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 			"DOCKER_CERT_PATH=/usr/local/etc/jenkins/certs/"
 		]) {
 			sh "docker pull abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
-			sh "docker run =p 8001:80 abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+			sh "docker run -p 8001:80 abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 		}
 	}
 } //node
