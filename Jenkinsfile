@@ -19,12 +19,11 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 	stage('Production') {
 		withEnv([
 			"DOCKER_TLS_VERIFY=1",
-			"DOCKER_HOST=tcp://sdn.harebrained-apps.com:2376",
+			"DOCKER_HOST=tcp://abs.harebrained-apps.com:2376",
 			"DOCKER_CERT_PATH=/usr/local/etc/jenkins/certs/"
 		]) {
 			sh "docker pull abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
-			sh "docker run abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
+			sh "docker run =p 8001:80 abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 		}
 	}
-
 } //node

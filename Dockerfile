@@ -1,7 +1,8 @@
 FROM microsoft/aspnetcore-build:1.0.1
 
-# This is FROM openjdk:8-jdk  
-
+#####
+# START OF FROM openjdk:8-jdk
+#####  
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		bzip2 \
 		unzip \
@@ -43,9 +44,13 @@ RUN set -x \
 # see CA_CERTIFICATES_JAVA_VERSION notes above
 RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-##### END OF THE JDK
+#####
+# END OF THE JDK
+#####
 
-##### START Jenkins Slave Node Config settings
+#####
+# START Jenkins Slave Node Config settings
+#####
 
 # Create Jenkins User
 RUN useradd jenkins -m -s /bin/bash
@@ -56,11 +61,19 @@ RUN chown -R jenkins /tmp
 RUN chgrp -R jenkins /tmp
 RUN usermod -a -G docker jenkins
 
+# Copy in the Docker certs, we'll use /usr/local/etc for them
+COPY certs/ca-key.pem /usr/local/etc/jenkins/certs/ca-key.pem
+COPY certs/ca.pem /usr/local/etc/jenkins/certs/ca.pem
+COPY certs/cert.pem /usr/local/etc/jenkins/certs/cert.pem
+COPY certs/key.pem /usr/local/etc/jenkins/certs/key.pem
+
+# Make sure cert permissions are set correctly
+RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
+RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
+RUN chmod +r /usr/local/etc/jenkins/certs/key.pem
+RUN chmod +r /usr/local/etc/jenkins/certs/ca-key.pem
+
 # Add the jenkins user to sudoers
 RUN echo "jenkins    ALL=(ALL)    ALL" >> etc/sudoers
 
-VOLUME /var/run/docker.sock:/var/run/docker.sock
-
 USER jenkins
-# Set Name Servers
-#COPY /files/resolv.conf /etc/resolv.conf
