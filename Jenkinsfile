@@ -23,8 +23,8 @@ node ('TeamBargelt_dotnetcore_simpleDotNet') {
 			"DOCKER_CERT_PATH=/usr/local/etc/jenkins/certs/"
 		]) {
 			sh "docker pull abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
-			sh "if docker ps | awk -v app=sdn 'NR>1{  ($(NF) == app )  }'; then docker stop sdn & docker rm -f sdn fi"
-			//sh "docker stop sdn"
+			//sh "if docker ps | awk -v app=sdn 'NR>1{  ($(NF) == app )  }'; then docker stop sdn & docker rm -f sdn fi"
+			sh "docker stop sdn || true && docker rm sdn || true"
 			sh "docker run -d --name sdn -p 8001:80 abs-registry.harebrained-apps.com/simpledotnet:${env.BUILD_NUMBER}"
 		}
 	}
